@@ -5,6 +5,27 @@
 # Home page
 GET     /                                       Application.index
 
+# Admin page
+GET     /admin                                  Application.adminIndex
+
+# Event Creation
+POST    /admin/new                          	Application.saveEvent
+
+# Event Deletion
+POST    /admin/delete                          	Application.deleteEvent
+
+# Event Editing
+POST    /admin/edit                          	Application.editEvent
+
+# Add Booking
+POST    /addbooking                          	Application.addBooking
+
+# Remove Booking
+POST    /rembooking                          	Application.removeBooking
+
+# Edit Booking
+POST    /editbooking                          	Application.editBooking
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

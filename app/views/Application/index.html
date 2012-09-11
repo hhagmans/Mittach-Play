@@ -1,4 +1,68 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-<h1>A blog will be here</h1>
+
+<div class="row">
+  <div class="span12">
+    <h2>Aktuelle Termine</h2>
+    <div class="well">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Speise</th>
+            <th>Datum</th>
+            <th>Anmeldungen
+            <th>davon vegetarisch</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          #{list items:events, as:'event'}
+          <tr id="event_${event.id}">
+            <td data-popover-title="Teilnehmer" data-popover-content="${event.users}">
+              <a href=#>${event.title}</a>
+            </td>
+            <td>${event.date.format('dd MMM yy')}</td>
+            <td>${event.users.size()}</td>
+            #{if event.vegetarian}
+            <td>${event.vegetarians.size()}</td>
+            #{/if}
+ 			#{else}
+ 			<td>N/A</td>
+ 			#{/else}
+            <td>
+              #{if user.shortname in event.users}
+              <form method="post" name="Buchung" action="@{removeBooking(event.id, user.shortname)}">
+                <input type="hidden" name="_method" value="delete">
+                <input type="submit" class="btn btn-danger" value="Stornieren">
+              </form>
+              #{/if}
+ 			  #{else}
+	              #{if event.slots == -1 || event.slots > event.users.size()}
+	              <form method="post" name="Buchung" action="@{addBooking(event.id, user.shortname)}">
+	                <input type="hidden" name="_method" value="put">
+               
+	                #{if event.vegetarian}
+	                	<label>
+	                  	<input type="checkbox" name="vegetarian">
+	                  	vegetarisch
+	                	</label>
+	                #{/if}
+              	  <input type="submit" class="btn btn-success" value="Buchen">
+              	  </form>
+              	  #{/if}
+ 			  	  #{else}
+              		ausgebucht
+              	  #{/else}
+              #{/else}
+            </td>
+          </tr>
+          <tr class="details">
+            <td colspan="8">${event.details}</td>
+          </tr>
+          #{/list}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

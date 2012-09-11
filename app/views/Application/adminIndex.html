@@ -1,0 +1,80 @@
+#{extends 'admin.html' /}
+#{set title:'Home' /}
+
+<div class="row">
+  <div class="span8">
+    <h2>Admin</h2>
+    <div class="well">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Speise</th>
+            <th>Datum</th>
+            <th>Anmeldungen
+            <th>davon vegetarisch</th>
+            <th>Aktion</th>
+          </tr>
+        </thead>
+        <tbody>
+          #{list items:events, as:'event'}
+          <tr id="event_${event.id}">
+            <td data-popover-title="Teilnehmer" data-popover-content="${event.users}">
+              <a href="#">${event.title}</a>
+            </td>
+            <td>${event.date.format('dd MMM yy')}</td>
+            <td>${event.users.size()}</td>
+            #{if event.vegetarian}
+            <td>${event.vegetarians.size()}</td>
+            #{/if}
+ 			#{else}
+ 			<td>N/A</td>
+ 			#{/else}
+            <td>
+              <form method="post" name="Buchung" action="@{deleteEvent(event.id)}">
+                <input type="submit" class="btn btn-danger" value="L&ouml;schen">
+              </form>
+            </td>
+            <td>
+              <form method="post" action="@{editEvent(event.id)}">
+                <input type="submit" class="btn btn-warning" value="Bearbeiten">
+              </form>
+            </td>
+            <td>
+              <form method="post" action="@{editBooking(event.id)}">
+                <input type="submit" class="btn btn-warning" value="Buchungen &auml;ndern">
+              </form>
+            </td>
+          </tr>
+          <tr class="details">
+            <td colspan="8">${event.details}</td>
+          </tr>
+          #{/list}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="span4">
+    <h2>Neuer Termin</h2>
+#{form @saveEvent()}
+	#{field 'title'}
+	  <label>Speise<input type="text" name="title" value=""></label>
+	  #{/field}
+	  #{field 'details'}
+	  <label>Details<textarea name="details"></textarea></label>
+	  #{/field}
+	  #{field 'date'}
+	  <label>Datum<input type="text" name="date" value="" class="auto-kal"></label>
+	  #{/field}
+	  #{field 'slots'}
+	  <label>Slots<input type="number" name="slots" min="1" value=""></label>
+	  #{/field}
+	  #{field 'vegetarian'}
+	  <label>
+	    <input type="checkbox" name="vegetarian">
+	    auch vegetarisch
+	  </label>
+	  #{/field}
+	  <input type="submit" class="btn btn-primary" value="Speichern">
+	  </div>
+#{/form}
+</div>

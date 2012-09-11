@@ -1,0 +1,25 @@
+#{extends 'admin.html' /}
+#{set title:'Home' /}
+
+<h2>Editiere Buchungen</h2>
+
+#{form @editBookingSave()}
+  #{field 'id'}
+	<input type="hidden" name="id" value="${event.id}">
+  #{/field}
+  <label>Bisherige User<textarea name="current_users">
+     #{list items:event.users, as:'user'}
+     ${user}
+     #{/list}
+  </textarea></label>
+  #{field 'user'}
+  <label>User zu l&ouml;schen bzw. hinzuzuf&uuml;gen<input type="text" name="user" value=""></label>
+  #{/field}
+  #{field 'vegetarian'}
+	  <label>
+	    <input type="checkbox" name="vegetarian">
+	    L&ouml;schen
+	  </label>
+	  #{/field}
+  <input type="submit" class="btn btn-primary" value="Speichern">
+  #{/form}

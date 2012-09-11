@@ -14,13 +14,22 @@
   <div class="container">
     <header>
       <a href="/"> <img src="@{'/public/images/logo.png'}"></a>
-      <p>Mahlzeit, ${user.shortname}</p>
+      <p>Mahlzeit, ${user}</p>
       <p>Mitarbeiter 3 €, Externe 5 €</p>
     </header>
     <nav>
-      <a href="/admin">
-        Admin
-    	</a>
+        </a>
+        <div id="admin">
+        <a href="#">
+            Report last Month
+        <br>
+        <a href="#">
+            Report Other Month
+        <br>
+        <a href="/">
+            Admin verlassen
+        </a>
+       </div>
     </nav>
 <div id ="alerts">
     <p class="alert alert-info">
