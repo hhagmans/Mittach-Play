@@ -130,26 +130,44 @@ public class Application extends Controller {
     public static void addBooking(long id, String username){
     	Event event = Event.findById(id);
     	List<String> errors = event.validateBooking();
-    	if(errors.size() == 0 && event != null) {
+    	if (errors.size() == 0 && event != null) {
     	event.users.add(username);
     	event.save();
     	index();
     	}
     	else{
-    		indexF(errors);
+    		if (errors.get(1) == "Nadd"){
+    			errors.remove(1);
+    			indexF(errors);
+    		}
+    		else {
+    			event.users.add(username);
+    	    	event.save();
+    	    	errors.remove(1);
+    	    	indexF(errors);
+    		}
     	}
     	
     }
     public static void removeBooking(long id, String username){
     	Event event = Event.findById(id);
     	List<String> errors = event.validateBooking();
-    	if(errors.size() == 0 && event != null) {
+    	if (errors.size() == 0 && event != null) {
     	event.users.remove(username);
     	event.save();
     	index();
     	}
     	else{
-    		indexF(errors);
+    		if (errors.get(1) == "Nadd"){
+    			errors.remove(1);
+    			indexF(errors);
+    		}
+    		else {
+    			event.users.remove(username);
+    	    	event.save();
+    	    	errors.remove(1);
+    	    	indexF(errors);
+    		}
     	}
     	
     }

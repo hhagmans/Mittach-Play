@@ -75,6 +75,7 @@ public class Event extends Model {
 		if (date.compareTo(aktDate) < 0)
     	{
     		errors.add("Buchungen sind nicht mehr änderbar. Bitte Anja oder einen Admin fragen, wenn trotzdem etwas geändert werden soll.");
+    		errors.add("Nadd");
     	}
 		else {
 			// Berechne Freitag der letzten Woche
@@ -89,6 +90,7 @@ public class Event extends Model {
 		    if (lastFriday.compareTo(aktDate) < 0)
 	    	{
 	    		errors.add("Achtung: Diese Buchungsänderung ist nicht vor Freitag vorgenommen worden. Bitte diese zeitig an Anja melden.");
+	    		errors.add("add");
 	    	}
 		}
     	
