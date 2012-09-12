@@ -12,8 +12,8 @@ public class Application extends Controller {
 
     @Before
     static void setConnectedUser() {
-            User user = new User("Test", false);
-            renderArgs.put("user", user);
+            User aktUser = new User("Test", false);
+            renderArgs.put("aktUser", aktUser);
     }
 	
     public static void index() {
@@ -36,19 +36,34 @@ public class Application extends Controller {
         {
         	details = "";
         }
+        
+        if (slots == 0)
+        {
+        	slots = -1;
+        }
+        
     	// Create event
         Event event = new Event(title, details, date, slots, vegetarian);
-        // Set tags list
-        
         
         // Validate
-        validation.valid(event);
-        if(validation.hasErrors()) {
-            render("@adminIndex");
+        List<String> errors = event.validate(false);
+        if(errors.size() == 0) {
+            // Save
+            event.save();
+            adminIndex();
         }
-        // Save
-        event.save();
-        adminIndex();
+        else{
+            createEventF(title, details, date, slots, vegetarian, errors);
+        }
+    }
+    
+    public static void createEventF(String title, String details, Date date, int slots, boolean vegetarian, List<String> erro){
+    	if (date instanceof Date == true ){
+    		render(title, details, date.toString(), slots, vegetarian, erro);
+    	}
+    	else {
+    	render(title, details, date, slots, vegetarian, erro);
+    	}	
     }
     
     public static void deleteEvent(long id){
@@ -65,15 +80,40 @@ public class Application extends Controller {
     
     public static void editEventSave(long id, String title, String details, Date date, int slots, boolean vegetarian){
     	Event event = Event.findById(id);
-    	if (event != null){
-    	event.title = title;
-       	event.details = details;
-       	event.date = date;
-       	event.slots = slots;
-      	event.vegetarian = vegetarian;
-       	event.save();
+    	
+    	if (details == null)
+        {
+        	details = "";
+        }
+        
+        if (slots == 0)
+        {
+        	slots = -1;
+        }
+    	
+        Event eventtmp = new Event(title, details, date, slots, vegetarian);
+        List<String> errors = eventtmp.validate(true);
+        if(errors.size() == 0 && event != null) {
+        	event.title = title;
+           	event.details = details;
+           	event.date = date;
+           	event.slots = slots;
+          	event.vegetarian = vegetarian;
+           	event.save();
+            adminIndex();
+        }
+        else{
+            editEventF(event.id, title, details, date, slots, vegetarian, errors);
+        }
+    }
+    
+    public static void editEventF(long id, String title, String details, Date date, int slots, boolean vegetarian, List<String> erro){
+    	if (date instanceof Date == true ){
+    		render(id, title, details, date.toString(), slots, vegetarian, erro);
     	}
-    	adminIndex();
+    	else {
+    	render(id, title, details, date, slots, vegetarian, erro);
+    	}
     }
     
     public static void addBooking(long id, String username){

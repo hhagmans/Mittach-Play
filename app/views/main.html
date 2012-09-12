@@ -14,7 +14,7 @@
   <div class="container">
     <header>
       <a href="/"> <img src="@{'/public/images/logo.png'}"></a>
-      <p>Mahlzeit, ${user.shortname}</p>
+      <p>Mahlzeit, ${aktUser.shortname}</p>
       <p>Mitarbeiter 3 €, Externe 5 €</p>
     </header>
     <nav>
@@ -37,7 +37,6 @@
     </p>
 </div>
 
-     <div name="alert"></div>
     <div id="main">
             #{doLayout /} 
         </div>

@@ -11,11 +11,17 @@ GET     /admin                                  Application.adminIndex
 # Event Creation
 POST    /admin/new                          	Application.saveEvent
 
+# Event Creation after Error
+GET    /admin/newF                          	Application.createEventF
+
 # Event Deletion
 POST    /admin/delete                          	Application.deleteEvent
 
 # Event Editing
 POST    /admin/edit                          	Application.editEvent
+
+# Event Editing after Error
+GET    /admin/editF                          	Application.editEventF
 
 # Add Booking
 POST    /addbooking                          	Application.addBooking

@@ -34,4 +34,41 @@ public class Event extends Model {
         this.vegetarian = vegetarian;
     }
  
+    public List<String> validate(boolean edit) {
+    	List<String> errors = new ArrayList<String>();
+    	if (date instanceof Date != true ){
+    		 errors.add("Datum in falschem Format");
+    	}
+    	else {
+        	Date aktDate = new Date();
+    		if (date.compareTo(aktDate) < 0)
+        	{
+        		errors.add("Datum schon vergangen");
+        	}
+    	}
+    	
+    	
+    	
+    	if (edit == false)
+    	{
+    	System.out.print(Event.find("byDate", date).first());
+    	
+    	if (Event.find("byDate", date).first() != null)
+    	{
+    		errors.add("Event an diesem Datum schon vorhanden");
+    	}
+    	}
+    
+    	
+    	if (title == null || title.isEmpty())
+    	{
+    		errors.add("Speisentitel fehlt");
+    	}
+    	
+    	
+    	
+		return errors; 
+       
+    }
+    
 }

@@ -19,7 +19,7 @@
         <tbody>
           #{list items:events, as:'event'}
           <tr id="event_${event.id}">
-            <td data-popover-title="Teilnehmer" data-popover-content="${event.users}">
+            <td data-popover-title="Teilnehmer" data-popover-content="#{list items:event.users, as:'user'}${user},#{/list}">
               <a href=#>${event.title}</a>
             </td>
             <td>${event.date.format('dd MMM yy')}</td>
@@ -31,15 +31,15 @@
  			<td>N/A</td>
  			#{/else}
             <td>
-              #{if user.shortname in event.users}
-              <form method="post" name="Buchung" action="@{removeBooking(event.id, user.shortname)}">
+              #{if aktUser.shortname in event.users}
+              <form method="post" name="Buchung" action="@{removeBooking(event.id, aktUser.shortname)}">
                 <input type="hidden" name="_method" value="delete">
                 <input type="submit" class="btn btn-danger" value="Stornieren">
               </form>
               #{/if}
  			  #{else}
 	              #{if event.slots == -1 || event.slots > event.users.size()}
-	              <form method="post" name="Buchung" action="@{addBooking(event.id, user.shortname)}">
+	              <form method="post" name="Buchung" action="@{addBooking(event.id, aktUser.shortname)}">
 	                <input type="hidden" name="_method" value="put">
                
 	                #{if event.vegetarian}
