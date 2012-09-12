@@ -48,7 +48,6 @@ public class Event extends Model {
     	}
     	
     	
-    	
     	if (edit == false)
     	{
     	System.out.print(Event.find("byDate", date).first());
@@ -65,10 +64,35 @@ public class Event extends Model {
     		errors.add("Speisentitel fehlt");
     	}
     	
-    	
-    	
 		return errors; 
        
+    }
+    
+    public List<String> validateBooking() {
+    	List<String> errors = new ArrayList<String>();
+    	
+    	Date aktDate = new Date();
+		if (date.compareTo(aktDate) < 0)
+    	{
+    		errors.add("Buchungen sind nicht mehr änderbar. Bitte Anja oder einen Admin fragen, wenn trotzdem etwas geändert werden soll.");
+    	}
+		else {
+			// Berechne Freitag der letzten Woche
+			Calendar c = Calendar.getInstance();
+			c.setTime(date);
+			
+			c.add(Calendar.WEEK_OF_YEAR, -1);
+		    c.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+		    
+		    Date lastFriday = c.getTime();
+
+		    if (lastFriday.compareTo(aktDate) < 0)
+	    	{
+	    		errors.add("Achtung: Diese Buchungsänderung ist nicht vor Freitag vorgenommen worden. Bitte diese zeitig an Anja melden.");
+	    	}
+		}
+    	
+    	return errors;
     }
     
 }

@@ -11,7 +11,7 @@
 		});
 	});
 
-	$("table").on("submit", "form", function(ev) {
+/*	$("table").on("submit", "form", function(ev) {
         if ($(this).attr("name") == "Buchung" || $(this).attr("name") == "Loeschen"){
 		var form = $(this);
 		var uri = form.attr("action");
@@ -32,6 +32,6 @@
 		});
 		ev.preventDefault();
         }
-	});
+	});*/
 
 }(jQuery));

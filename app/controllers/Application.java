@@ -16,11 +16,22 @@ public class Application extends Controller {
             renderArgs.put("aktUser", aktUser);
     }
 	
+    public static void root() {
+    	index();
+    }
+    
     public static void index() {
     	List<Event> events = Event.find(
                 "order by date desc"
             ).from(1).fetch(10);
         render(events);
+    }
+    
+    public static void indexF(List<String> erro) {
+    	List<Event> events = Event.find(
+                "order by date desc"
+            ).from(1).fetch(10);
+        render(events, erro);
     }
     
     public static void adminIndex() {
@@ -118,16 +129,28 @@ public class Application extends Controller {
     
     public static void addBooking(long id, String username){
     	Event event = Event.findById(id);
+    	List<String> errors = event.validateBooking();
+    	if(errors.size() == 0 && event != null) {
     	event.users.add(username);
     	event.save();
     	index();
+    	}
+    	else{
+    		indexF(errors);
+    	}
     	
     }
     public static void removeBooking(long id, String username){
     	Event event = Event.findById(id);
+    	List<String> errors = event.validateBooking();
+    	if(errors.size() == 0 && event != null) {
     	event.users.remove(username);
     	event.save();
     	index();
+    	}
+    	else{
+    		indexF(errors);
+    	}
     	
     }
     
