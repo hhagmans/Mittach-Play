@@ -26,21 +26,21 @@ public class BasicTest extends UnitTest {
 	@Test
 	public void createPost() {
 	    
-	    // Create a new post
+	    // Create a new event
 	    new Event("Essen", "Essensdetails", new Date(), -1, false).save();
 	    
-	    // Test that the post has been created
+	    // Test that the event has been created
 	    assertEquals(1, Event.count());
 	    
-	    // Retrieve all posts created by Bob
+	    // Retrieve all events with title "Essen"
 	    List<Event> allPosts = Event.find("byTitle", "Essen").fetch();
 	    
 	    // Tests
 	    assertEquals(1, allPosts.size());
 	    Event firstPost = allPosts.get(0);
 	    assertNotNull(firstPost);
-	    assertEquals("My first post", firstPost.title);
-	    assertEquals("Hello world", firstPost.details);
+	    assertEquals("Essen", firstPost.title);
+	    assertEquals("Essensdetails", firstPost.details);
 	    assertNotNull(firstPost.date);
 	}
 

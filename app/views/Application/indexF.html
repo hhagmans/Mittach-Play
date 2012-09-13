@@ -68,6 +68,14 @@
           #{/list}
         </tbody>
       </table>
+      #{list items:1..cpages, as:'i'}
+     	#{if i == page}
+        ${i}
+        #{/if}
+        #{else}
+        <a href="@{index(i)}">${i}</a>
+        #{/else}
+    #{/list}
     </div>
   </div>
 </div>

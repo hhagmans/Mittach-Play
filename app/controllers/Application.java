@@ -9,6 +9,7 @@ import models.*;
 
 public class Application extends Controller {
 
+	static final int MAXEVENTS = 10;
 
     @Before
     static void setConnectedUser() {
@@ -23,24 +24,26 @@ public class Application extends Controller {
     public static void index(int page) {
     	List<Event> events = Event.find(
                 "order by date desc"
-            ).from(0 + (10*(page-1))).fetch(10 + (10*(page-1)));
-    	long cpages = Event.count()/11 + 1;
+            ).from(MAXEVENTS*(page-1)).fetch(MAXEVENTS);
+    	long cpages = Event.count()/MAXEVENTS + 1;
+    	System.out.println(cpages);
+    	System.out.println(Event.count());
         render(events, cpages, page);
     }
     
     public static void indexF(int page, List<String> erro) {
     	List<Event> events = Event.find(
                 "order by date desc"
-            ).from(0 + (10*(page-1))).fetch(10 + (10*(page-1)));
-    	long cpages = Event.count()/11 + 1;
+            ).from(MAXEVENTS*(page-1)).fetch(MAXEVENTS);
+    	long cpages = Event.count()/MAXEVENTS + 1;
         render(events, cpages, page, erro);
     }
     
     public static void adminIndex(int page) {
     	List<Event> events = Event.find(
                 "order by date desc"
-            ).from(0 + (10*(page-1))).fetch(10 + (10*(page-1)));
-    	long cpages = Event.count()/11 + 1;
+            ).from(MAXEVENTS*(page-1)).fetch(MAXEVENTS);
+    	long cpages = Event.count()/MAXEVENTS + 1;
         render(events, cpages, page);
     }
 
