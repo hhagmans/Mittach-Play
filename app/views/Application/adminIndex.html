@@ -19,7 +19,7 @@
           #{list items:events, as:'event'}
           <tr id="event_${event.id}">
             <td data-popover-title="Teilnehmer" data-popover-content="#{list items:event.users, as:'user'}${user},#{/list}">
-              <a href="#">${event.title}</a>
+              <a href="@{showUsers(event)}">${event.title}</a>
             </td>
             <td>${event.date.format('dd MMM yy')}</td>
             <td>${event.users.size()}</td>
@@ -30,7 +30,7 @@
  			<td>N/A</td>
  			#{/else}
             <td>
-              <form method="post" name="Buchung" action="@{deleteEvent(event.id)}">
+              <form method="post" name="Buchung" action="@{deleteEvent(event.id, page)}">
                 <input type="submit" class="btn btn-danger" value="L&ouml;schen">
               </form>
             </td>
@@ -51,6 +51,14 @@
           #{/list}
         </tbody>
       </table>
+      #{list items:1..cpages, as:'i'}
+     	#{if i == page}
+        ${i}
+        #{/if}
+        #{else}
+        <a href="@{adminIndex(i)}">${i}</a>
+        #{/else}
+    #{/list}
     </div>
   </div>
   <div class="span4">

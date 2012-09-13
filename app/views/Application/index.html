@@ -19,7 +19,7 @@
           #{list items:events, as:'event'}
           <tr id="event_${event.id}">
             <td data-popover-title="Teilnehmer" data-popover-content="#{list items:event.users, as:'user'}${user},#{/list}">
-              <a href=#>${event.title}</a>
+              <a href="@{showUsers(event)}">${event.title}</a>
             </td>
             <td>${event.date.format('dd MMM yy')}</td>
             <td>${event.users.size()}</td>
@@ -31,14 +31,14 @@
  			#{/else}
             <td>
               #{if aktUser.shortname in event.users}
-              <form method="post" name="Buchung" action="@{removeBooking(event.id, aktUser.shortname)}">
+              <form method="post" name="Buchung" action="@{removeBooking(event.id, aktUser.shortname, page)}">
                 <input type="hidden" name="_method" value="delete">
                 <input type="submit" class="btn btn-danger" value="Stornieren">
               </form>
               #{/if}
  			  #{else}
 	              #{if event.slots == -1 || event.slots > event.users.size()}
-	              <form method="post" name="Buchung" action="@{addBooking(event.id, aktUser.shortname)}">
+	              <form method="post" name="Buchung" action="@{addBooking(event.id, aktUser.shortname, page)}">
 	                <input type="hidden" name="_method" value="put">
                
 	                #{if event.vegetarian}
@@ -62,6 +62,15 @@
           #{/list}
         </tbody>
       </table>
+     #{list items:1..cpages, as:'i'}
+     	#{if i == page}
+        ${i}
+        #{/if}
+        #{else}
+        <a href="@{index(i)}">${i}</a>
+        #{/else}
+    #{/list}
+
     </div>
   </div>
 </div>

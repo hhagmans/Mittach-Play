@@ -17,30 +17,37 @@ public class Application extends Controller {
     }
 	
     public static void root() {
-    	index();
+    	index(1);
     }
     
-    public static void index() {
+    public static void index(int page) {
     	List<Event> events = Event.find(
                 "order by date desc"
-            ).from(1).fetch(10);
-        render(events);
+            ).from(0 + (10*(page-1))).fetch(10 + (10*(page-1)));
+    	long cpages = Event.count()/11 + 1;
+        render(events, cpages, page);
     }
     
-    public static void indexF(List<String> erro) {
+    public static void indexF(int page, List<String> erro) {
     	List<Event> events = Event.find(
                 "order by date desc"
-            ).from(1).fetch(10);
-        render(events, erro);
+            ).from(0 + (10*(page-1))).fetch(10 + (10*(page-1)));
+    	long cpages = Event.count()/11 + 1;
+        render(events, cpages, page, erro);
     }
     
-    public static void adminIndex() {
+    public static void adminIndex(int page) {
     	List<Event> events = Event.find(
                 "order by date desc"
-            ).from(1).fetch(10);
-        render(events);
+            ).from(0 + (10*(page-1))).fetch(10 + (10*(page-1)));
+    	long cpages = Event.count()/11 + 1;
+        render(events, cpages, page);
     }
 
+    public static void showUsers(Event event) {
+    	render(event);
+    }
+    
     public static void saveEvent(String title, String details, Date date, int slots, boolean vegetarian) {
 
         if (details == null)
@@ -61,7 +68,7 @@ public class Application extends Controller {
         if(errors.size() == 0) {
             // Save
             event.save();
-            adminIndex();
+            adminIndex(1);
         }
         else{
             createEventF(title, details, date, slots, vegetarian, errors);
@@ -77,10 +84,10 @@ public class Application extends Controller {
     	}	
     }
     
-    public static void deleteEvent(long id){
+    public static void deleteEvent(long id, int page){
     	Event event = Event.findById(id);
     	event.delete();
-    	adminIndex();
+    	adminIndex(page);
     	
     }
     
@@ -111,7 +118,7 @@ public class Application extends Controller {
            	event.slots = slots;
           	event.vegetarian = vegetarian;
            	event.save();
-            adminIndex();
+            adminIndex(1);
         }
         else{
             editEventF(event.id, title, details, date, slots, vegetarian, errors);
@@ -127,46 +134,46 @@ public class Application extends Controller {
     	}
     }
     
-    public static void addBooking(long id, String username){
+    public static void addBooking(long id, String username, int page){
     	Event event = Event.findById(id);
     	List<String> errors = event.validateBooking();
     	if (errors.size() == 0 && event != null) {
     	event.users.add(username);
     	event.save();
-    	index();
+    	index(1);
     	}
     	else{
     		if (errors.get(1) == "Nadd"){
     			errors.remove(1);
-    			indexF(errors);
+    			indexF(page, errors);
     		}
     		else {
     			event.users.add(username);
     	    	event.save();
     	    	errors.remove(1);
-    	    	indexF(errors);
+    	    	indexF(page, errors);
     		}
     	}
     	
     }
-    public static void removeBooking(long id, String username){
+    public static void removeBooking(long id, String username, int page){
     	Event event = Event.findById(id);
     	List<String> errors = event.validateBooking();
     	if (errors.size() == 0 && event != null) {
     	event.users.remove(username);
     	event.save();
-    	index();
+    	index(1);
     	}
     	else{
     		if (errors.get(1) == "Nadd"){
     			errors.remove(1);
-    			indexF(errors);
+    			indexF(page, errors);
     		}
     		else {
     			event.users.remove(username);
     	    	event.save();
     	    	errors.remove(1);
-    	    	indexF(errors);
+    	    	indexF(page, errors);
     		}
     	}
     	
@@ -187,7 +194,7 @@ public class Application extends Controller {
     		event.users.add(user);
     	}
     	event.save();
-    	adminIndex();
+    	adminIndex(1);
     	
     }
     

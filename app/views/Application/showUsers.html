@@ -1,0 +1,10 @@
+#{extends 'admin.html' /}
+#{set title:'Home' /}
+
+<h2>Bisherige User</h2>
+ 
+<div name="current_users">
+     #{list items:event.users, as:'user'}
+     ${user}<br>
+     #{/list}
+  </div>

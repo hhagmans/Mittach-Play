@@ -25,7 +25,7 @@
           #{list items:events, as:'event'}
           <tr id="event_${event.id}">
             <td data-popover-title="Teilnehmer" data-popover-content="#{list items:event.users, as:'user'}${user},#{/list}">
-              <a href=#>${event.title}</a>
+              <a href=@{showUsers(event)}>${event.title}</a>
             </td>
             <td>${event.date.format('dd MMM yy')}</td>
             <td>${event.users.size()}</td>

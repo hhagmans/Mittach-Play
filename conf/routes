@@ -11,6 +11,9 @@ GET     /events                                Application.index
 # Home page after Error
 GET     /F                                      Application.indexF
 
+# Show user for Event
+GET     /users                                	Application.showUsers
+
 # Admin page
 GET     /admin                                  Application.adminIndex
 
