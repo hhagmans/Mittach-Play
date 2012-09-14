@@ -26,8 +26,6 @@ public class Application extends Controller {
                 "order by date desc"
             ).from(MAXEVENTS*(page-1)).fetch(MAXEVENTS);
     	long cpages = Event.count()/MAXEVENTS + 1;
-    	System.out.println(cpages);
-    	System.out.println(Event.count());
         render(events, cpages, page);
     }
     
