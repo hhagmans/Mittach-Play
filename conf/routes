@@ -41,6 +41,12 @@ POST    /rembooking                          	Application.removeBooking
 # Edit Booking
 POST    /editbooking                          	Application.editBooking
 
+# Reports
+GET    /reports                          		Application.Reports
+
+# Manual Reports
+GET    /manreports                          	Application.manualReports
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

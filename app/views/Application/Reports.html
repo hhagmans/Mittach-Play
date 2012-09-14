@@ -1,0 +1,4 @@
+Mitarbeiter;Anzahl;Details
+#{list items:users.keySet(), as:'key'}
+${key};${users.get(key).size()};${users.get(key)}
+#{/list}

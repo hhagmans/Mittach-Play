@@ -1,0 +1,13 @@
+#{extends 'admin.html' /}
+#{set title:'Home' /}
+
+<h2>Buchungen</h2>
+#{form @Reports()}
+	#{field 'start'}
+	<label>Beginn<input type="text" name="start" value="" class="auto-kal"></label>
+	#{/field}
+	#{field 'end'}
+	  <label>Ende<input type="text" name="end" value="" class="auto-kal"></label>
+	  #{/field}
+	  <input type="submit" class="btn btn-primary" value="Anfordern">
+#{/form}

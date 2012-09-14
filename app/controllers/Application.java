@@ -201,4 +201,59 @@ public class Application extends Controller {
     	
     }
     
+    public static void Reports(Date start, Date end) {
+    	List<Event> events = Event.findAll();
+    	List<Event> events2 = new ArrayList();
+    	
+    	// Get beginning and end of the last month
+    	if (start == null || end == null){
+    	start = new Date();
+    	end = new Date();
+    	Calendar c = Calendar.getInstance();
+		c.setTime(start);
+		c.add(Calendar.MONTH, -1);
+	    c.set(Calendar.DAY_OF_MONTH, 1);
+	    c.set(Calendar.HOUR_OF_DAY, 0);   
+	    c.set(Calendar.MINUTE, 0);
+	    c.set(Calendar.SECOND, 0);                
+	    c.set(Calendar.MILLISECOND, 0); 
+	    start = c.getTime();
+	    int lastDate = c.getActualMaximum(Calendar.DATE);
+	    c.set(Calendar.DATE, lastDate); 
+	    end = c.getTime();
+    	}
+	    
+    	ListIterator<Event> iter = events.listIterator();
+    	while (iter.hasNext()){
+    		Event ev = iter.next();
+    		if (start.compareTo(ev.date) <= 0 && ev.date.compareTo(end) <= 0){
+    			events2.add(ev);
+    		}
+    	}
+    	ListIterator<Event> iter2 = events2.listIterator();
+    	Map<String,List<Date>> users = new HashMap<String,List<Date>>();
+    	while (iter2.hasNext()){
+    		Event event = iter2.next();
+    		ListIterator<String> useriter = event.users.listIterator();
+    		while (useriter.hasNext()){
+	    		String user = useriter.next();
+	    		Date date = event.date;
+	    		List<Date> dates = new ArrayList<Date>();
+	    		if (users.containsKey(user)){
+	    		dates = users.get(user);
+	    		}
+				dates.add(date);
+	    		users.put(user, dates);
+    		}
+    	}
+    	response.contentType = "text/csv";
+    	response.setHeader("Content-Disposition",
+    	"attachment;filename=Reports.csv");
+    	render(users);
+    }
+    
+    
+    public static void manualReports() {
+    render();
+    }
 }
