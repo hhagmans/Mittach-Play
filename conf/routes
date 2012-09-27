@@ -18,7 +18,7 @@ GET     /users                                	Application.showUsers
 GET     /admin                                  Application.adminIndex
 
 # Event Creation
-POST    /admin/new                          	Application.saveEvent
+POST    /admin/new                          	Application.newEvent
 
 # Event Creation after Error
 GET    /admin/newF                          	Application.createEventF
@@ -30,7 +30,10 @@ POST    /admin/delete                          	Application.deleteEvent
 POST    /admin/edit                          	Application.editEvent
 
 # Event Editing after Error
-GET    /admin/editF                          	Application.editEventF
+GET    /admin/edit                          	Application.editEvent
+
+# Event Saving
+POST    /admin/editeventsave                     Application.editEventSave
 
 # Add Booking
 POST    /addbooking                          	Application.addBooking

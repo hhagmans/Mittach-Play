@@ -1,8 +1,14 @@
 package controllers;
 
 import play.*;
+import play.data.validation.Valid;
+import play.data.validation.Validation;
 import play.mvc.*;
+import play.data.validation.Error;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import models.*;
@@ -29,14 +35,6 @@ public class Application extends Controller {
         render(events, cpages, page);
     }
     
-    public static void indexF(int page, List<String> erro) {
-    	List<Event> events = Event.find(
-                "order by date desc"
-            ).from(MAXEVENTS*(page-1)).fetch(MAXEVENTS);
-    	long cpages = Event.count()/MAXEVENTS + 1;
-        render(events, cpages, page, erro);
-    }
-    
     public static void adminIndex(int page) {
     	List<Event> events = Event.find(
                 "order by date desc"
@@ -49,8 +47,28 @@ public class Application extends Controller {
     	render(event);
     }
     
-    public static void saveEvent(String title, String details, Date date, int slots, boolean vegetarian) {
+    public static void newEvent() {
 
+    	String title = params.get("title");
+    	String details = params.get("details");
+    	 SimpleDateFormat formatter = new SimpleDateFormat(
+                 "yyyy-MM-dd");
+    	String date = params.get("date");
+    	Date formattedDate;
+		try {
+			formattedDate = (Date)formatter.parse(params.get("date"));
+		} catch (ParseException e) {
+			formattedDate = null;
+		}
+		int slots;
+		try{
+	    slots = Integer.parseInt(params.get("slots"));
+		} catch (NumberFormatException e)
+		{
+			slots = 0;
+		}
+    	boolean vegetarian = Boolean.parseBoolean(params.get("vegetarian"));
+    	
         if (details == null)
         {
         	details = "";
@@ -62,27 +80,22 @@ public class Application extends Controller {
         }
         
     	// Create event
-        Event event = new Event(title, details, date, slots, vegetarian);
+        Event event = new Event(title, details, formattedDate, slots, vegetarian);
         
         // Validate
-        List<String> errors = event.validate(false);
-        if(errors.size() == 0) {
-            // Save
+        if (validation.valid(event).ok){
+        	// Save
             event.save();
             adminIndex(1);
-        }
+        }   
         else{
-            createEventF(title, details, date, slots, vegetarian, errors);
+        	if(validation.hasErrors()) {
+                params.flash(); // add http parameters to the flash scope
+                validation.keep(); // keep the errors for the next request
+                
+                render(title, details, date, slots, vegetarian);
+        	}
         }
-    }
-    
-    public static void createEventF(String title, String details, Date date, int slots, boolean vegetarian, List<String> erro){
-    	if (date instanceof Date == true ){
-    		render(title, details, date.toString(), slots, vegetarian, erro);
-    	}
-    	else {
-    	render(title, details, date, slots, vegetarian, erro);
-    	}	
     }
     
     public static void deleteEvent(long id, int page){
@@ -111,8 +124,7 @@ public class Application extends Controller {
         }
     	
         Event eventtmp = new Event(title, details, date, slots, vegetarian);
-        List<String> errors = eventtmp.validate(true);
-        if(errors.size() == 0 && event != null) {
+        if(validation.valid(eventtmp).ok && event != null) {
         	event.title = title;
            	event.details = details;
            	event.date = date;
@@ -122,60 +134,37 @@ public class Application extends Controller {
             adminIndex(1);
         }
         else{
-            editEventF(event.id, title, details, date, slots, vegetarian, errors);
+        	if(validation.hasErrors()) {
+                params.flash(); // add http parameters to the flash scope
+                validation.keep(); // keep the errors for the next request
+                editEvent(event.id);
+        	}
         }
     }
     
-    public static void editEventF(long id, String title, String details, Date date, int slots, boolean vegetarian, List<String> erro){
-    	if (date instanceof Date == true ){
-    		render(id, title, details, date.toString(), slots, vegetarian, erro);
+    public static void addBooking(@Valid Event event, String username, int page){
+    	if (event != null) {
+    	if(validation.hasErrors()) {
+          params.flash(); // add http parameters to the flash scope
+          validation.keep(); // keep the errors for the next request
+          index(1);
     	}
-    	else {
-    	render(id, title, details, date, slots, vegetarian, erro);
-    	}
-    }
-    
-    public static void addBooking(long id, String username, int page){
-    	Event event = Event.findById(id);
-    	List<String> errors = event.validateBooking();
-    	if (errors.size() == 0 && event != null) {
     	event.users.add(username);
     	event.save();
     	index(1);
     	}
-    	else{
-    		if (errors.get(1) == "Nadd"){
-    			errors.remove(1);
-    			indexF(page, errors);
-    		}
-    		else {
-    			event.users.add(username);
-    	    	event.save();
-    	    	errors.remove(1);
-    	    	indexF(page, errors);
-    		}
-    	}
     	
     }
-    public static void removeBooking(long id, String username, int page){
-    	Event event = Event.findById(id);
-    	List<String> errors = event.validateBooking();
-    	if (errors.size() == 0 && event != null) {
+    public static void removeBooking(@Valid Event event, String username, int page){
+    	if (event != null) {
+        if(validation.hasErrors()) {
+            params.flash(); // add http parameters to the flash scope
+            validation.keep(); // keep the errors for the next request
+            index(1);
+        }
     	event.users.remove(username);
     	event.save();
     	index(1);
-    	}
-    	else{
-    		if (errors.get(1) == "Nadd"){
-    			errors.remove(1);
-    			indexF(page, errors);
-    		}
-    		else {
-    			event.users.remove(username);
-    	    	event.save();
-    	    	errors.remove(1);
-    	    	indexF(page, errors);
-    		}
     	}
     	
     }

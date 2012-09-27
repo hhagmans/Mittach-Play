@@ -9,22 +9,19 @@
 	</div>
 	#{/ifErrors}
 
-<h2>Editiere Termin</h2>
-#{form @editEventSave()}
-	#{field 'id'}
-	<input type="hidden" name="id" value="${event.id}">
-	#{/field}
+<h2>Neuer Termin</h2>
+#{form @newEvent()}
 	#{field 'title'}
-	  <label>Speise<input type="text" name="title" value="${event.title}"></label>
+	  <label>Speise<input type="text" name="title" value="${title}"></label>
 	  #{/field}
 	  #{field 'details'}
-	  <label>Details<textarea name="details">${event.details}</textarea></label>
+	  <label>Details<textarea name="details">${details}</textarea></label>
 	  #{/field}
 	  #{field 'date'}
-	  <label>Datum<input type="text" name="date" value="${event.date}" class="auto-kal"></label>
+	  <label>Datum<input type="text" name="date" value="${date}" class="auto-kal"></label>
 	  #{/field}
 	  #{field 'slots'}
-	  <label>Slots<input type="number" name="slots" min="1" value="${event.slots}"></label>
+	  <label>Slots<input type="number" name="slots" min="1" value="${slots}"></label>
 	  #{/field}
 	  #{field 'vegetarian'}
 	  <label>
@@ -33,4 +30,5 @@
 	  </label>
 	  #{/field}
 	  <input type="submit" class="btn btn-primary" value="Speichern">
+	  </div>
 #{/form}

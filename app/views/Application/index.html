@@ -3,6 +3,15 @@
 
 <div class="row">
   <div class="span12">
+  
+	#{ifErrors}
+	<div name="alert">
+	    #{errors}
+	   <div class="alert alert-error">${error} </div>
+	    #{/errors}
+	</div>
+	#{/ifErrors}
+
     <h2>Aktuelle Termine</h2>
     <div class="well">
       <table class="table">
@@ -32,14 +41,14 @@
             <td>
               #{if aktUser.shortname in event.users}
               <form method="post" name="Buchung" action="@{removeBooking(event.id, aktUser.shortname, page)}">
-                <input type="hidden" name="_method" value="delete">
+                <input type="hidden" name="event.id" value="${event.id}"/>
                 <input type="submit" class="btn btn-danger" value="Stornieren">
               </form>
               #{/if}
  			  #{else}
 	              #{if event.slots == -1 || event.slots > event.users.size()}
 	              <form method="post" name="Buchung" action="@{addBooking(event.id, aktUser.shortname, page)}">
-	                <input type="hidden" name="_method" value="put">
+	                <input type="hidden" name="event.id" value="${event.id}"/>
                
 	                #{if event.vegetarian}
 	                	<label>

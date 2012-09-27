@@ -3,25 +3,31 @@ package models;
 import java.util.*;
 import javax.persistence.*;
 
-import org.hibernate.annotations.CollectionOfElements;
  
+import play.data.validation.Check;
+import play.data.validation.CheckWith;
 import play.db.jpa.*;
+
+import util.validation.*;
  
 @Entity
 public class Event extends Model {
  
     public String title;
+    @CheckWith(value=EventValidator.class, message="other")
     public Date date;
+    
     public boolean vegetarian;
     public int slots;
     
     @Lob
     public String details;
     
-    @CollectionOfElements
+    @CheckWith(value=BookingValidator.class, message="other")
+    @ElementCollection
     public List<String> users;
     
-    @CollectionOfElements
+    @ElementCollection
     public List<String> vegetarians;
      
     public Event(String title, String details, Date date, int slots, boolean vegetarian) { 
