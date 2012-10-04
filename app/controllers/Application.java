@@ -19,7 +19,11 @@ public class Application extends Controller {
 
     @Before
     static void setConnectedUser() {
-            User aktUser = new User("Test", false);
+            User aktUser = User.find("byShortName", "Test").first();
+            if (aktUser == null){
+            	aktUser = new User("Test", false);
+                aktUser.save();
+            }
             renderArgs.put("aktUser", aktUser);
     }
 	
@@ -100,6 +104,11 @@ public class Application extends Controller {
     
     public static void deleteEvent(long id, int page){
     	Event event = Event.findById(id);
+    	ListIterator<Booking> iter = event.bookings.listIterator();
+        while (iter.hasNext()){
+        	Booking book = iter.next();
+        	iter.remove();
+        }
     	event.delete();
     	adminIndex(page);
     	
@@ -129,7 +138,7 @@ public class Application extends Controller {
            	event.details = details;
            	event.date = date;
            	event.slots = slots;
-          	event.vegetarian = vegetarian;
+          	event.vegetarian_opt = vegetarian;
            	event.save();
             adminIndex(1);
         }
@@ -142,27 +151,37 @@ public class Application extends Controller {
         }
     }
     
-    public static void addBooking(@Valid Event event, String username, int page){
+    public static void addBooking(@Valid Event event, long UserID, int page){
     	if (event != null) {
     	if(validation.hasErrors()) {
           params.flash(); // add http parameters to the flash scope
           validation.keep(); // keep the errors for the next request
           index(1);
     	}
-    	event.users.add(username);
+    	Booking booking = new Booking(event.id, UserID, Boolean.parseBoolean(params.get("vegetarian")));
+    	booking.save();
+    	event.bookings.add(booking);
     	event.save();
     	index(1);
     	}
     	
     }
-    public static void removeBooking(@Valid Event event, String username, int page){
+    public static void removeBooking(@Valid Event event, long id, int page){
     	if (event != null) {
         if(validation.hasErrors()) {
             params.flash(); // add http parameters to the flash scope
             validation.keep(); // keep the errors for the next request
             index(1);
         }
-    	event.users.remove(username);
+        ListIterator<Booking> iter = event.bookings.listIterator();
+        Booking book = null;
+        while (iter.hasNext()){
+    		book = iter.next();
+    		if (book.EventID == event.id && book.UserID == id){
+    			break;
+    		}
+    		}
+        event.bookings.remove(book);
     	event.save();
     	index(1);
     	}
@@ -174,16 +193,35 @@ public class Application extends Controller {
     	render(event);
     }
     
-    public static void editBookingSave(long id, String user, boolean vegetarian){
+    public static void editBookingSave(long id, String username, boolean vegetarian){
     	Event event = Event.findById(id);
+    	System.out.println(username);
+    	User user = User.find("byShortname", username).first();
     	if (vegetarian == true){
-    		event.users.remove(user);
+    	if (user != null){
+    		ListIterator<Booking> iter = event.bookings.listIterator();
+            while (iter.hasNext()){
+        		Booking book = iter.next();
+        		if (book.EventID == event.id && book.UserID == user.id){
+        			iter.remove();
+        		}
+        		
+        		}
+        	event.save();
+    	}
     	}
     	else {
-    		if (event.users.contains(user) == false && user != "")
-    		event.users.add(user);
+    		if (user == null){
+    			user = new User(username,false);
+    			user.save();
+    		}
+    		Booking booking = new Booking(event.id, user.id, false);
+    		if (event.getUsers().contains(username) == false && user.shortname != ""){
+        	booking.save();
+    		event.bookings.add(booking);
+        	event.save();
+    		}
     	}
-    	event.save();
     	adminIndex(1);
     	
     }
@@ -218,19 +256,19 @@ public class Application extends Controller {
     		}
     	}
     	ListIterator<Event> iter2 = events2.listIterator();
-    	Map<String,List<Date>> users = new HashMap<String,List<Date>>();
+    	Map<Booking,List<Date>> users = new HashMap<Booking,List<Date>>();
     	while (iter2.hasNext()){
     		Event event = iter2.next();
-    		ListIterator<String> useriter = event.users.listIterator();
-    		while (useriter.hasNext()){
-	    		String user = useriter.next();
+    		ListIterator<Booking> bookingIter = event.bookings.listIterator();
+    		while (bookingIter.hasNext()){
+	    		Booking book = bookingIter.next();
 	    		Date date = event.date;
 	    		List<Date> dates = new ArrayList<Date>();
-	    		if (users.containsKey(user)){
-	    		dates = users.get(user);
+	    		if (users.containsKey(book)){
+	    		dates = users.get(book);
 	    		}
 				dates.add(date);
-	    		users.put(user, dates);
+	    		users.put(book, dates);
     		}
     	}
     	response.contentType = "text/csv";

@@ -12,8 +12,6 @@ public class User extends Model {
     public String shortname;
     public boolean isAdmin;
     
-    @ManyToOne
-    public Event events;
 
 	public User(String shortname, boolean isAdmin) {
 		this.shortname = shortname;

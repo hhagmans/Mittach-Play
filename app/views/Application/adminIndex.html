@@ -18,12 +18,12 @@
         <tbody>
           #{list items:events, as:'event'}
           <tr id="event_${event.id}">
-            <td data-popover-title="Teilnehmer" data-popover-content="#{list items:event.users, as:'user'}${user},#{/list}">
+            <td data-popover-title="Teilnehmer" data-popover-content="#{list items:event.getUsers(), as:'user'}${user},#{/list}">
               <a href="@{showUsers(event)}">${event.title}</a>
             </td>
             <td>${event.date.format('dd MMM yy')}</td>
-            <td>${event.users.size()}</td>
-            #{if event.vegetarian}
+            <td>${event.bookings.size()}</td>
+            #{if event.vegetarian_opt}
             <td>${event.vegetarians.size()}</td>
             #{/if}
  			#{else}

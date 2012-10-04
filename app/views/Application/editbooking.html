@@ -8,12 +8,12 @@
 	<input type="hidden" name="id" value="${event.id}">
   #{/field}
   <label>Bisherige User<textarea name="current_users">
-     #{list items:event.users, as:'user'}
+     #{list items:event.getUsers(), as:'user'}
      ${user}
      #{/list}
   </textarea></label>
-  #{field 'user'}
-  <label>User zu l&ouml;schen bzw. hinzuzuf&uuml;gen<input type="text" name="user" value=""></label>
+  #{field 'username'}
+  <label>User zu l&ouml;schen bzw. hinzuzuf&uuml;gen<input type="text" name="username" value=""></label>
   #{/field}
   #{field 'vegetarian'}
 	  <label>
