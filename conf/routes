@@ -36,13 +36,13 @@ GET    /admin/edit                          	Application.editEvent
 POST    /admin/editeventsave                     Application.editEventSave
 
 # Add Booking
-POST    /addbooking                          	Application.addBooking
+POST    /addbooking                          	Bookingcontroller.addBooking
 
 # Remove Booking
-POST    /rembooking                          	Application.removeBooking
+POST    /rembooking                          	Bookingcontroller.removeBooking
 
 # Edit Booking
-POST    /editbooking                          	Application.editBooking
+POST    /editbooking                          	Bookingcontroller.editBooking
 
 # Reports
 GET    /reports                          		Application.Reports

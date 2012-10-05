@@ -28,26 +28,26 @@
           #{list items:events, as:'event'}
           <tr id="event_${event.id}">
             <td data-popover-title="Teilnehmer" data-popover-content="#{list items:event.getUsers(), as:'user'}${user},#{/list}">
-              <a href="@{showUsers(event)}">${event.title}</a>
+              <a href="@{showUsers(event.id)}">${event.title}</a>
             </td>
             <td>${event.date.format('dd MMM yy')}</td>
             <td>${event.bookings.size()}</td>
             #{if event.vegetarian_opt}
-            <td>${event.vegetarians.size()}</td>
+            <td>${event.getVegetarians().size()}</td>
             #{/if}
  			#{else}
  			<td>N/A</td>
  			#{/else}
             <td>
               #{if aktUser.shortname in event.getUsers()}
-              <form method="post" name="Buchung" action="@{removeBooking(event.id, aktUser.id, page)}">
+              <form method="post" name="Buchung" action="@{Bookingcontroller.removeBooking(event.id, aktUser.id, page)}">
                 <input type="hidden" name="event.id" value="${event.id}"/>
                 <input type="submit" class="btn btn-danger" value="Stornieren">
               </form>
               #{/if}
  			  #{else}
 	              #{if event.slots == -1 || event.slots > event.users.size()}
-	              <form method="post" name="Buchung" action="@{addBooking(event.id, aktUser.id, page)}">
+	              <form method="post" name="Buchung" action="@{Bookingcontroller.addBooking(event.id, aktUser.id, page)}">
 	                <input type="hidden" name="event.id" value="${event.id}"/>
                
 	                #{if event.vegetarian_opt}

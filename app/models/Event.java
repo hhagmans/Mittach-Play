@@ -50,5 +50,18 @@ public class Event extends Model {
     }
     	return users;
     }
+    
+    public List<String> getVegetarians(){
+    	ListIterator<Booking> iter = this.bookings.listIterator();
+    	List<String> users = new ArrayList<String>();;
+    	User user;
+    	while (iter.hasNext()){
+    		Booking book = iter.next();
+    		user = User.findById(book.UserID);
+    		if (user != null && book.vegetarian)
+    		users.add(user.shortname);
+    }
+    	return users;
+    }
  
 }
