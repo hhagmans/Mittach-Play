@@ -1,4 +1,5 @@
 Mitarbeiter;Anzahl;Details
 #{list items:users.keySet(), as:'key'}
-${key};${users.get(key).size()};${users.get(key).eventID}
+${key};${users.get(key).size()};#{list items:users.get(key), as:'value'}${value}, #{/list}
+
 #{/list}

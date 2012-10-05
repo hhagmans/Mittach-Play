@@ -156,6 +156,8 @@ public class Application extends Controller {
     public static void Reports(Date start, Date end) {
     	List<Event> events = Event.findAll();
     	List<Event> events2 = new ArrayList();
+    	SimpleDateFormat formatter = new SimpleDateFormat(
+                "yyyy-MM-dd");
     	
     	// Get beginning and end of the last month
     	if (start == null || end == null){
@@ -183,19 +185,21 @@ public class Application extends Controller {
     		}
     	}
     	ListIterator<Event> iter2 = events2.listIterator();
-    	Map<Booking,List<Date>> users = new HashMap<Booking,List<Date>>();
+    	Map<String,List<String>> users = new HashMap<String,List<String>>();
     	while (iter2.hasNext()){
     		Event event = iter2.next();
     		ListIterator<Booking> bookingIter = event.bookings.listIterator();
     		while (bookingIter.hasNext()){
 	    		Booking book = bookingIter.next();
+	    		User user = User.findById(book.UserID);
 	    		Date date = event.date;
-	    		List<Date> dates = new ArrayList<Date>();
-	    		if (users.containsKey(book)){
-	    		dates = users.get(book);
+	   			String formattedDate = formatter.format(date);
+	    		List<String> dates = new ArrayList<String>();
+	    		if (users.containsKey(user.shortname)){
+	    		dates = users.get(user.shortname);
 	    		}
-				dates.add(date);
-	    		users.put(book, dates);
+				dates.add(formattedDate);
+	    		users.put(user.shortname, dates);
     		}
     	}
     	response.contentType = "text/csv";
