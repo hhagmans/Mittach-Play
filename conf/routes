@@ -2,53 +2,44 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Root
-GET     /                                      Application.root
-
 # Home page
-GET     /events                                Application.index
+GET     /events/				                Indexcontroller.index
 
-# Home page after Error
-GET     /F                                      Application.indexF
+# Root
+GET     /                                      Indexcontroller.index
 
 # Show user for Event
-GET     /users                                	Application.showUsers
+GET     /users/{<[0-9]+>id}                   	Basecontroller.showUsers
 
 # Admin page
-GET     /admin                                  Application.adminIndex
+GET     /admin/					                  Admincontroller.index
 
 # Event Creation
-POST    /admin/new                          	Application.newEvent
-
-# Event Creation after Error
-GET    /admin/newF                          	Application.createEventF
+POST    /admin/new                          	Admincontroller.createEvent
 
 # Event Deletion
-POST    /admin/delete                          	Application.deleteEvent
+POST    /admin/delete/{<[0-9]+>id}            	Admincontroller.deleteEvent
 
 # Event Editing
-POST    /admin/edit                          	Application.editEvent
-
-# Event Editing after Error
-GET    /admin/edit                          	Application.editEvent
+GET    /admin/edit/{<[0-9]+>id}                  Admincontroller.editEvent
 
 # Event Saving
-POST    /admin/editeventsave                     Application.editEventSave
+POST    /admin/updateEvent/{<[0-9]+>id}          Admincontroller.updateEvent
 
 # Add Booking
-POST    /addbooking                          	Bookingcontroller.addBooking
+POST    /addbooking                          	Indexcontroller.addBooking
 
 # Remove Booking
-POST    /rembooking                          	Bookingcontroller.removeBooking
+POST    /rembooking                          	Indexcontroller.removeBooking
 
 # Edit Booking
-POST    /editbooking                          	Bookingcontroller.editBooking
+POST    /editbooking/{<[0-9]+>id}               Admincontroller.editBooking
 
 # Reports
-GET    /reports                          		Application.Reports
+GET    /reports                          		Admincontroller.reports
 
 # Manual Reports
-GET    /manreports                          	Application.manualReports
+GET    /manreports                          	Admincontroller.manualReports
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

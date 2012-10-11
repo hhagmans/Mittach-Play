@@ -3,7 +3,7 @@
 
 <h2>Editiere Buchungen</h2>
 
-#{form @Bookingcontroller.editBookingSave()}
+#{form @AdminController.updateBooking()}
   #{field 'id'}
 	<input type="hidden" name="id" value="${event.id}">
   #{/field}

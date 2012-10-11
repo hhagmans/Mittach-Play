@@ -12,46 +12,16 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import models.*;
-public class Application extends Controller {
 
-	static final int MAXEVENTS = 10;
-
-    @Before
-    static void setConnectedUser() {
-            User aktUser = User.find("byShortName", "Test").first();
-            if (aktUser == null){
-            	aktUser = new User("Test", false);
-                aktUser.save();
-            }
-            renderArgs.put("aktUser", aktUser);
+public class AdminController extends BaseController{
+	
+	public static void index(int page) {
+		List<Event> events = getEventsPaginated(page);
+		long cpages = Event.count()/MAXEVENTS + 1;
+        render(events, cpages, page);
     }
 	
-    public static void root() {
-    	index(1);
-    }
-    
-    public static void index(int page) {
-    	List<Event> events = Event.find(
-                "order by date desc"
-            ).from(MAXEVENTS*(page-1)).fetch(MAXEVENTS);
-    	long cpages = Event.count()/MAXEVENTS + 1;
-        render(events, cpages, page);
-    }
-    
-    public static void adminIndex(int page) {
-    	List<Event> events = Event.find(
-                "order by date desc"
-            ).from(MAXEVENTS*(page-1)).fetch(MAXEVENTS);
-    	long cpages = Event.count()/MAXEVENTS + 1;
-        render(events, cpages, page);
-    }
-
-    public static void showUsers(long id) {
-    	Event event = Event.findById(id);
-    	render(event);
-    }
-    
-    public static void newEvent() {
+	public static void createEvent() {
 
     	String title = params.get("title");
     	String details = params.get("details");
@@ -63,6 +33,7 @@ public class Application extends Controller {
 			formattedDate = (Date)formatter.parse(params.get("date"));
 		} catch (ParseException e) {
 			formattedDate = null;
+			date = null;
 		}
 		int slots;
 		try{
@@ -71,7 +42,14 @@ public class Application extends Controller {
 		{
 			slots = 0;
 		}
-    	boolean vegetarian = Boolean.parseBoolean(params.get("vegetarian"));
+		
+		boolean vegetarian;
+		if (params.get("vegetarian") == null){
+			vegetarian = false;
+		}
+		else{
+			vegetarian = true;
+		}
     	
         if (details == null)
         {
@@ -90,7 +68,7 @@ public class Application extends Controller {
         if (validation.valid(event).ok){
         	// Save
             event.save();
-            adminIndex(1);
+            index(1);
         }   
         else{
         	if(validation.hasErrors()) {
@@ -110,7 +88,7 @@ public class Application extends Controller {
         	iter.remove();
         }
     	event.delete();
-    	adminIndex(page);
+    	index(page);
     	
     }
     
@@ -119,7 +97,7 @@ public class Application extends Controller {
     	render(event);	
     }
     
-    public static void editEventSave(long id, String title, String details, Date date, int slots, boolean vegetarian){
+    public static void updateEvent(long id, String title, String details, Date date, int slots, boolean vegetarian){
     	Event event = Event.findById(id);
     	
     	if (details == null)
@@ -140,7 +118,7 @@ public class Application extends Controller {
            	event.slots = slots;
           	event.vegetarian_opt = vegetarian;
            	event.save();
-            adminIndex(1);
+            index(1);
         }
         else{
         	if(validation.hasErrors()) {
@@ -153,7 +131,7 @@ public class Application extends Controller {
     
     
     
-    public static void Reports(Date start, Date end) {
+    public static void reports(Date start, Date end) {
     	List<Event> events = Event.findAll();
     	List<Event> events2 = new ArrayList();
     	SimpleDateFormat formatter = new SimpleDateFormat(
@@ -212,4 +190,44 @@ public class Application extends Controller {
     public static void manualReports() {
     render();
     }
+	
+
+    
+    public static void editBooking(long id){
+    	Event event = Event.findById(id);
+    	render(event);
+    }
+    
+    public static void updateBooking(long id, String username, boolean vegetarian){
+    	Event event = Event.findById(id);
+    	User user = User.find("byShortname", username).first();
+    	if (vegetarian == true){
+    	if (user != null){
+    		ListIterator<Booking> iter = event.bookings.listIterator();
+            while (iter.hasNext()){
+        		Booking book = iter.next();
+        		if (book.EventID == event.id && book.UserID == user.id){
+        			iter.remove();
+        		}
+        		
+        		}
+        	event.save();
+    	}
+    	}
+    	else {
+    		if (user == null){
+    			user = new User(username,false);
+    			user.save();
+    		}
+    		Booking booking = new Booking(event.id, user.id, false);
+    		if (event.getUsers().contains(username) == false && user.shortname != ""){
+        	booking.save();
+    		event.bookings.add(booking);
+        	event.save();
+    		}
+    	}
+    	index(1);
+    	
+    }
+	
 }

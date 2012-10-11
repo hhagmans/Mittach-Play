@@ -35,12 +35,12 @@
               </form>
             </td>
             <td>
-              <form method="post" action="@{editEvent(event.id)}">
+              <form method="get" action="@{editEvent(event.id)}">
                 <input type="submit" class="btn btn-warning" value="Bearbeiten">
               </form>
             </td>
             <td>
-              <form method="post" action="@{Bookingcontroller.editBooking(event.id)}">
+              <form method="post" action="@{editBooking(event.id)}">
                 <input type="submit" class="btn btn-warning" value="Buchungen &auml;ndern">
               </form>
             </td>
@@ -56,14 +56,14 @@
         ${i}
         #{/if}
         #{else}
-        <a href="@{adminIndex(i)}">${i}</a>
+        <a href="@{index(i)}">${i}</a>
         #{/else}
     #{/list}
     </div>
   </div>
   <div class="span4">
     <h2>Neuer Termin</h2>
-#{form @newEvent()}
+#{form @createEvent()}
 	#{field 'title'}
 	  <label>Speise<input type="text" name="title" value=""></label>
 	  #{/field}

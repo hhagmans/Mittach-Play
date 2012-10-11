@@ -13,17 +13,17 @@
 <body>
   <div class="container">
     <header>
-      <a href="/"> <img src="@{'/public/images/logo.png'}"></a>
+      <a href="@{IndexController.index(1)}"> <img src="@{'/public/images/logo.png'}"></a>
       <p>Mahlzeit, ${aktUser}</p>
       <p>Mitarbeiter 3 €, Externe 5 €</p>
     </header>
     <nav>
         </a>
         <div id="admin">
-        <a href="@{Application.Reports(null, null)}">
+        <a href="@{AdminController.reports(null, null)}">
             Report last Month
         <br>
-        <a href="@{Application.manualReports()}">
+        <a href="@{AdminController.manualReports()}">
             Report Other Month
         <br>
         <a href="/">
