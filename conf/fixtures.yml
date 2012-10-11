@@ -1,0 +1,31 @@
+Event(Pommes):
+    title: "Pommes"
+    details: "mit Mayo"
+    date: 2012-10-20
+    slots: 15
+    vegetarian_opt: true
+    bookings: []
+
+Event(Schnitzel):
+    title: "Schnitzel"
+    details: "mit Sosse"
+    date: 2012-10-21
+    slots: 10
+    vegetarian_opt: false
+    bookings: []
+
+Event(Spaghetti):
+    title: "Spaghetti"
+    details: "mit Bollo"
+    date: 2012-10-22
+    slots: 20
+    vegetarian_opt: false
+    bookings: []
+
+User(Horst):
+    shortname: "Horst"
+    isAdmin: true
+
+User(Heinz):
+    shortname: "Heinz"
+    isAdmin: false
