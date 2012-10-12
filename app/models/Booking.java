@@ -13,12 +13,15 @@ import util.validation.*;
 @Entity
 public class Booking extends Model{
 	
-	public long EventID;
+	@ManyToOne(fetch=FetchType.EAGER)
+	  @JoinColumn(name="EVENT_ID")
+	public Event Event;
 	public long UserID;
 	public boolean vegetarian;
 	
-	public Booking(long event, long user, boolean vegetarian){
-		this.EventID = event;
+	
+	public Booking(Event event, long user, boolean vegetarian){
+		this.Event = event;
 		this.UserID = user;
 		this.vegetarian = vegetarian;
 	}

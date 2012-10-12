@@ -39,7 +39,7 @@ public class IndexController extends BaseController {
     		vegetarian = false;
     	}
     	
-    	Booking booking = new Booking(event.id, UserID, vegetarian);
+    	Booking booking = new Booking(event, UserID, vegetarian);
     	booking.save();
     	event.bookings.add(booking);
     	event.save();
@@ -58,7 +58,7 @@ public class IndexController extends BaseController {
         Booking book = null;
         while (iter.hasNext()){
     		book = iter.next();
-    		if (book.EventID == event.id && book.UserID == id){
+    		if (book.UserID == id){
     			break;
     		}
     		}

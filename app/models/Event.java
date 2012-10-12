@@ -25,7 +25,7 @@ public class Event extends Model {
     public String details;
     
     @CheckWith(value=BookingValidator.class, message="other")
-    @ElementCollection
+    @OneToMany(mappedBy="Event")
     public List<Booking> bookings;
     
      

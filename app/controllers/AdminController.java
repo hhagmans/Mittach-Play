@@ -206,7 +206,7 @@ public class AdminController extends BaseController{
     		ListIterator<Booking> iter = event.bookings.listIterator();
             while (iter.hasNext()){
         		Booking book = iter.next();
-        		if (book.EventID == event.id && book.UserID == user.id){
+        		if (book.Event == event && book.UserID == user.id){
         			iter.remove();
         		}
         		
@@ -219,7 +219,7 @@ public class AdminController extends BaseController{
     			user = new User(username,false);
     			user.save();
     		}
-    		Booking booking = new Booking(event.id, user.id, false);
+    		Booking booking = new Booking(event, user.id, false);
     		if (event.getUsers().contains(username) == false && user.shortname != ""){
         	booking.save();
     		event.bookings.add(booking);
