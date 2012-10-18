@@ -44,7 +44,7 @@ public class Event extends Model {
     	User user;
     	while (iter.hasNext()){
     		Booking book = iter.next();
-    		user = User.findById(book.UserID);
+    		user = User.findById(book.user.getId());
     		if (user != null)
     		users.add(user.shortname);
     }
@@ -57,7 +57,7 @@ public class Event extends Model {
     	User user;
     	while (iter.hasNext()){
     		Booking book = iter.next();
-    		user = User.findById(book.UserID);
+    		user = User.findById(book.user.getId());
     		if (user != null && book.vegetarian)
     		users.add(user.shortname);
     }

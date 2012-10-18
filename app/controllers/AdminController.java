@@ -169,7 +169,7 @@ public class AdminController extends BaseController{
     		ListIterator<Booking> bookingIter = event.bookings.listIterator();
     		while (bookingIter.hasNext()){
 	    		Booking book = bookingIter.next();
-	    		User user = User.findById(book.UserID);
+	    		User user = User.findById(book.user.getId());
 	    		Date date = event.date;
 	   			String formattedDate = formatter.format(date);
 	    		List<String> dates = new ArrayList<String>();
@@ -206,7 +206,7 @@ public class AdminController extends BaseController{
     		ListIterator<Booking> iter = event.bookings.listIterator();
             while (iter.hasNext()){
         		Booking book = iter.next();
-        		if (book.Event == event && book.UserID == user.id){
+        		if (book.Event == event && book.user.getId() == user.id){
         			book.delete();
         			break;
         		}
@@ -220,7 +220,7 @@ public class AdminController extends BaseController{
     			user = new User(username,false);
     			user.save();
     		}
-    		Booking booking = new Booking(event, user.id, false);
+    		Booking booking = new Booking(event, user, false);
     		if (event.getUsers().contains(username) == false && user.shortname != ""){
         	booking.save();
     		event.bookings.add(booking);
