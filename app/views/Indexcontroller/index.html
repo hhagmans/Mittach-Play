@@ -42,6 +42,7 @@
               #{if aktUser.shortname in event.getUsers()}
               <form method="post" name="Buchung" action="@{removeBooking(event.id, aktUser.id, page)}">
                 <input type="hidden" name="event.id" value="${event.id}"/>
+                <input type="hidden" name="user.id" value="${aktUser.id}"/>
                 <input type="submit" class="btn btn-danger" value="Stornieren">
               </form>
               #{/if}
@@ -49,6 +50,7 @@
 	              #{if event.slots == -1 || event.slots > event.users.size()}
 	              <form method="post" name="Buchung" action="@{addBooking(event.id, aktUser.id, page)}">
 	                <input type="hidden" name="event.id" value="${event.id}"/>
+	                <input type="hidden" name="user.id" value="${aktUser.id}"/>
                
 	                #{if event.vegetarian_opt}
 	                	<label>

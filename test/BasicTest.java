@@ -7,7 +7,7 @@ public class BasicTest extends UnitTest {
 
 	@Before
     public void setup() {
-        Fixtures.deleteAll();
+        Fixtures.deleteDatabase();
     }
 	
 	@Test
