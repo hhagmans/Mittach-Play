@@ -59,11 +59,10 @@ public class IndexController extends BaseController {
         while (iter.hasNext()){
     		book = iter.next();
     		if (book.UserID == id){
+    			book.delete();
     			break;
     		}
     		}
-        event.bookings.remove(book);
-    	event.save();
     	index(page);
     	}
     	

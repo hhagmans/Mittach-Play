@@ -207,7 +207,8 @@ public class AdminController extends BaseController{
             while (iter.hasNext()){
         		Booking book = iter.next();
         		if (book.Event == event && book.UserID == user.id){
-        			iter.remove();
+        			book.delete();
+        			break;
         		}
         		
         		}

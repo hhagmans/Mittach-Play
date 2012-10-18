@@ -13,7 +13,7 @@ import util.validation.*;
 @Entity
 public class Booking extends Model{
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	  @JoinColumn(name="EVENT_ID")
 	public Event Event;
 	public long UserID;
