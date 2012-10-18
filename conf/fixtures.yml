@@ -29,3 +29,18 @@ User(Horst):
 User(Heinz):
     shortname: "Heinz"
     isAdmin: false
+
+Booking(1):
+    event: Pommes
+    user: Horst
+    vegetarian: true
+
+Booking(2):
+    event: Schnitzel
+    user: Horst
+    vegetarian: false
+
+Booking(3):
+    event: Spaghetti
+    user: Heinz
+    vegetarian: false
