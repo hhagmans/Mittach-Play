@@ -206,7 +206,7 @@ public class AdminController extends BaseController{
     		ListIterator<Booking> iter = event.bookings.listIterator();
             while (iter.hasNext()){
         		Booking book = iter.next();
-        		if (book.Event == event && book.user.getId() == user.id){
+        		if (book.event == event && book.user.getId() == user.id){
         			book.delete();
         			break;
         		}
