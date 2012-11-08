@@ -2,6 +2,7 @@
 /tmp
 /eclipse
 /bin
+/target
 .classpath
 .project
 .settings
