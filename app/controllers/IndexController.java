@@ -24,32 +24,27 @@ public class IndexController extends BaseController {
 		render(events, cpages, page);
 	}
 
-	public static void addBooking(@Valid Event event, User user, int page) {
+	public static void addBooking(@Valid Event event, User user, Integer page) {
 		if (event != null) {
 			if (validation.hasErrors()) {
 				params.flash(); // add http parameters to the flash scope
 				validation.keep(); // keep the errors for the next request
 				index(page);
 			}
-			boolean vegetarian;
-			if (params.get("vegetarian") != null) {
-				vegetarian = true;
-			} else {
-				vegetarian = false;
+			else {			
+				boolean vegetarian = (params.get("vegetarian") != null);
+				User myUser = User.findById(user.getId());
+	
+				Booking booking = new Booking(event, myUser, vegetarian);
+				booking.save();
+				event.bookings.add(booking);
+				event.save();
+				index(page);
 			}
-			
-			User myUser = User.findById(user.getId());
-
-			Booking booking = new Booking(event, myUser, vegetarian);
-			booking.save();
-			event.bookings.add(booking);
-			event.save();
-			index(page);
 		}
-
 	}
 
-	public static void removeBooking(@Valid Event event, User user, int page) {
+	public static void removeBooking(@Valid Event event, User user, Integer page) {
 		if (event != null) {
 			if (validation.hasErrors()) {
 				params.flash(); // add http parameters to the flash scope
