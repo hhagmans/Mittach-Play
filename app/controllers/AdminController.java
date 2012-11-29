@@ -10,56 +10,42 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 import models.*;
 
 public class AdminController extends BaseController{
 	
-	public static void index(int page) {
+	
+	
+	public static void index(Integer page) {
 		List<Event> events = getEventsPaginated(page);
 		long cpages = Event.count()/MAXEVENTS + 1;
         render(events, cpages, page);
     }
 	
-	public static void createEvent() {
-
+	public static void createEvent(Event event1) {
     	String title = params.get("title");
     	String details = params.get("details");
-    	 SimpleDateFormat formatter = new SimpleDateFormat(
-                 "yyyy-MM-dd");
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     	String date = params.get("date");
-    	Date formattedDate;
+    	Date formattedDate = null;
+    	
 		try {
 			formattedDate = (Date)formatter.parse(params.get("date"));
-		} catch (ParseException e) {
-			formattedDate = null;
+		} catch (ParseException e) {;
 			date = null;
 		}
-		int slots;
-		try{
-	    slots = Integer.parseInt(params.get("slots"));
-		} catch (NumberFormatException e)
-		{
-			slots = 0;
+		
+		int slots = -1;
+		try {
+			slots = Integer.parseInt(params.get("slots"));
+		} catch (NumberFormatException e) {
+			play.Logger.error("Param slots is not an integer!");
 		}
 		
-		boolean vegetarian;
-		if (params.get("vegetarian") == null){
-			vegetarian = false;
-		}
-		else{
-			vegetarian = true;
-		}
-    	
-        if (details == null)
-        {
-        	details = "";
-        }
-        
-        if (slots == 0)
-        {
-        	slots = -1;
-        }
+		boolean vegetarian = (params.get("vegetarian") != null);
+        details = (details == null ? "" : details);
         
     	// Create event
         Event event = new Event(title, details, formattedDate, slots, vegetarian);
@@ -80,20 +66,19 @@ public class AdminController extends BaseController{
         }
     }
     
-    public static void deleteEvent(long id, int page){
-    	Event event = Event.findById(id);
-    	ListIterator<Booking> iter = event.bookings.listIterator();
-        while (iter.hasNext()){
-        	iter.next();
-        	iter.remove();
-        }
-    	event.delete();
-    	index(page);
-    	
-    }
+	public static void deleteEvent(Event event, Integer page) {
+		if (event != null) {
+			ListIterator<Booking> iter = event.bookings.listIterator();
+			while (iter.hasNext()) {
+				iter.next();
+				iter.remove();
+			}
+			event.delete();
+		}
+		index(page);
+	}
     
-    public static void editEvent(long id){
-    	Event event = Event.findById(id);
+    public static void editEvent(Event event) {
     	render(event);	
     }
     
@@ -124,7 +109,7 @@ public class AdminController extends BaseController{
         	if(validation.hasErrors()) {
                 params.flash(); // add http parameters to the flash scope
                 validation.keep(); // keep the errors for the next request
-                editEvent(event.id);
+                editEvent(event);
         	}
         }
     }
@@ -206,7 +191,7 @@ public class AdminController extends BaseController{
     		ListIterator<Booking> iter = event.bookings.listIterator();
             while (iter.hasNext()){
         		Booking book = iter.next();
-        		if (book.Event == event && book.user.getId() == user.id){
+        		if (book.event == event && book.user.getId() == user.id){
         			book.delete();
         			break;
         		}

@@ -1,3 +1,7 @@
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
 import org.junit.*;
 import org.junit.Before;
 
@@ -26,6 +30,24 @@ public class ApplicationTest extends FunctionalTest {
         assertContentMatch("Spaghetti", response);
         
         //assertContentMatch("Auflauf", response);
+    }
+    
+    @Test
+    public void testBookings() {
+    	assertEquals(2, User.count());
+    	assertEquals(3, Event.count());
+    	assertEquals(3, Booking.count());
+    	
+    	List<Booking> bookings = Booking.all().fetch();
+    	
+    	List<Event> events = Event.find("byTitle", "Pommes").fetch();
+    	
+    	for (Event event : events) {
+    		assertEquals(1, event.bookings.size());
+    		for (ListIterator<Booking> iter = event.bookings.listIterator(); iter.hasNext();) {
+    			assertNotNull(iter.next().user);
+    		}
+		}
     }
     
 }

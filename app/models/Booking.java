@@ -15,7 +15,7 @@ public class Booking extends Model{
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="event_id")
-	public Event Event;
+	public Event event;
 	
 	@ManyToOne
 	public User user;
@@ -23,9 +23,14 @@ public class Booking extends Model{
 	
 	
 	public Booking(Event event, User user, boolean vegetarian){
-		this.Event = event;
+		this.event = event;
 		this.user = user;
 		this.vegetarian = vegetarian;
+	}
+	
+	@Override
+	public String toString() {
+		return "Booking[" + this.user.toString() + ", " + this.event.title + "]";
 	}
 
 }
