@@ -41,6 +41,10 @@ GET    /reports                          		Admincontroller.reports
 # Manual Reports
 GET    /manreports                          	Admincontroller.manualReports
 
+# Json
+
+GET    /event/json/Event_{<[0-9]+>id}.json      JsonController.getEventAsJson
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
