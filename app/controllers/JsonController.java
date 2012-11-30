@@ -12,19 +12,15 @@ import models.Event;
 
 public class JsonController extends BaseController {
 	
-	public static void getEventAsJson(long eventID) {
-		Event event = Event.findById(eventID);
+	public static void getEventAsJson(long id) {
+		Event event = Event.findById(id);
 		response.contentType = "application/json";
 		renderJSON(event);
 		
 	}
-
-	public static void createEventJson() {
-	    render();
-	}
 	
 	public static void handleJsonBody(String body) {
-		// curl -v -H "Content-Type: application/json" -X POST -d '{"title":"dfh","date":"Nov 30, 2012 12:00:00 AM","vegetarian_opt":false,"slots":-1,"details":"dhf","bookings":[],"id":1}' http://localhost:9000/jsoncontroller/handlejsonbody
+		// curl -v -H "Content-Type: application/json" -X POST -d '{"title":"dfh","date":"Nov 30, 2012 12:00:00 AM","vegetarian_opt":false,"slots":-1,"details":"dhf","bookings":[],"id":1}' http://localhost:9000/event/json/create
 		Logger.info("content type: %s", request.contentType);
 	    Logger.info("json string: %s", body);
 	    Logger.info(request.params.toString());
