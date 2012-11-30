@@ -38,6 +38,15 @@ public class Event extends Model {
         this.vegetarian_opt = vegetarian;
     }
     
+    public Event(Event event) { 
+        this.bookings = event.bookings;
+        this.title = event.title;
+        this.slots = event.slots;
+        this.details = event.details;
+        this.date = event.date;
+        this.vegetarian_opt = event.vegetarian_opt;
+    }
+    
     public List<String> getUsers(){
     	ListIterator<Booking> iter = this.bookings.listIterator();
     	List<String> users = new ArrayList<String>();;
