@@ -18,13 +18,15 @@
       <p>Mitarbeiter 3 €, Externe 5 €</p>
     </header>
     <nav>
-        </a>
         <div id="admin">
         <a href="@{AdminController.reports(null, null)}">
-            Report last Month
+            Report last Month</a>
         <br>
         <a href="@{AdminController.manualReports()}">
-            Report Other Month
+            Report Other Month</a>
+        <br>
+        <a href="@{JsonController.createEventJson()}">
+            Create Event with Json String</a>
         <br>
         <a href="/">
             Admin verlassen
