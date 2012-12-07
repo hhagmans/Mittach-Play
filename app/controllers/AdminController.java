@@ -66,20 +66,22 @@ public class AdminController extends BaseController{
         }
     }
     
-	public static void deleteEvent(Event event, Integer page) {
+	public static void deleteEvent(long id, Integer page) {
+		Event event = Event.findById(id);
 		if (event != null) {
 			ListIterator<Booking> iter = event.bookings.listIterator();
-			while (iter.hasNext()) {
-				iter.next();
-				iter.remove();
-			}
+            while (iter.hasNext()){
+        		Booking book = iter.next();
+        		book.delete();
+            }
 			event.delete();
 		}
 		index(page);
 	}
     
-    public static void editEvent(Event event) {
-    	render(event);	
+    public static void editEvent(long id) {
+    	Event event = Event.findById(id);
+    	render(event);
     }
     
     public static void updateEvent(long id, String title, String details, Date date, int slots, boolean vegetarian){
@@ -109,7 +111,7 @@ public class AdminController extends BaseController{
         	if(validation.hasErrors()) {
                 params.flash(); // add http parameters to the flash scope
                 validation.keep(); // keep the errors for the next request
-                editEvent(event);
+                editEvent(event.id);
         	}
         }
     }
@@ -118,36 +120,36 @@ public class AdminController extends BaseController{
     
     public static void reports(Date start, Date end) {
     	List<Event> events = Event.findAll();
-    	List<Event> events2 = new ArrayList();
+    	List<Event> eventsInTimeFrame = new ArrayList();
     	SimpleDateFormat formatter = new SimpleDateFormat(
                 "yyyy-MM-dd");
     	
-    	// Get beginning and end of the last month
+    	// Get beginning and end of the last month if start and and are not given
     	if (start == null || end == null){
-    	start = new Date();
-    	end = new Date();
-    	Calendar c = Calendar.getInstance();
-		c.setTime(start);
-		c.add(Calendar.MONTH, -1);
-	    c.set(Calendar.DAY_OF_MONTH, 1);
-	    c.set(Calendar.HOUR_OF_DAY, 0);   
-	    c.set(Calendar.MINUTE, 0);
-	    c.set(Calendar.SECOND, 0);                
-	    c.set(Calendar.MILLISECOND, 0); 
-	    start = c.getTime();
-	    int lastDate = c.getActualMaximum(Calendar.DATE);
-	    c.set(Calendar.DATE, lastDate); 
-	    end = c.getTime();
+    		start = new Date();
+    		end = new Date();
+    		Calendar c = Calendar.getInstance();
+    		c.setTime(start);
+    		c.add(Calendar.MONTH, -1);
+    		c.set(Calendar.DAY_OF_MONTH, 1);
+    		c.set(Calendar.HOUR_OF_DAY, 0);   
+    		c.set(Calendar.MINUTE, 0);
+    		c.set(Calendar.SECOND, 0);                
+    		c.set(Calendar.MILLISECOND, 0); 
+    		start = c.getTime();
+    		int lastDate = c.getActualMaximum(Calendar.DATE);
+    		c.set(Calendar.DATE, lastDate); 
+    		end = c.getTime();
     	}
 	    
     	ListIterator<Event> iter = events.listIterator();
     	while (iter.hasNext()){
     		Event ev = iter.next();
     		if (start.compareTo(ev.date) <= 0 && ev.date.compareTo(end) <= 0){
-    			events2.add(ev);
+    			eventsInTimeFrame.add(ev);
     		}
     	}
-    	ListIterator<Event> iter2 = events2.listIterator();
+    	ListIterator<Event> iter2 = eventsInTimeFrame.listIterator();
     	Map<String,List<String>> users = new HashMap<String,List<String>>();
     	while (iter2.hasNext()){
     		Event event = iter2.next();
