@@ -45,7 +45,13 @@ GET    /manreports                          	Admincontroller.manualReports
 GET		/event/json/{<[0-9]+>id}    			JsonController.getEventAsJson
 
 # Create Event with Json String
-POST	/event/json/create						JsonController.handleJsonBody
+POST	/event/json/create						JsonController.createJsonEvent
+
+# Update Event with Json String
+POST	/event/json/update						JsonController.updateJsonEvent
+
+# Create Booking with Json String
+POST	/event/json/addBooking					JsonController.addJsonBooking
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
