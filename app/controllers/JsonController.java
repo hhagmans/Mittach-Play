@@ -1,25 +1,21 @@
 package controllers;
 
-import java.sql.Date;
-import java.util.ListIterator;
-
-import play.*;
-import play.data.validation.Valid;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import models.Booking;
 import models.Event;
 import models.User;
+import play.Logger;
+import play.mvc.Http.StatusCode;
+
+import com.google.gson.Gson;
 
 public class JsonController extends BaseController {
 	
 	public static void getEventAsJson(long id) {
+		
 		Event event = Event.findById(id);
-		for (int i = 0; i< event.bookings.size();i++) {
-			event.bookings.get(i).event = null;
-		}
+		//for (int i = 0; i< event.bookings.size();i++) {
+		//	event.bookings.get(i).event = null;
+		//}
 		response.contentType = "application/json";
 		renderJSON(event);
 		
@@ -33,7 +29,7 @@ public class JsonController extends BaseController {
 	    event.title = event.title + "new";
 	    event = new Event(event);
 	    event.save();
-	    AdminController.index(1);
+	    response.status = StatusCode.CREATED;
 	}
 	
 	public static void updateJsonEvent(String body) {
