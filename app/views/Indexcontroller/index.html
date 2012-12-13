@@ -67,7 +67,7 @@
               #{/else}
             </td>
             <td>
-            <form method="get" name="Buchung" action="@{JsonController.getEventAsJson(event.id)}">
+            <form method="get" name="Buchung" action="@{JsonController.event(event.id)}">
 	        <input type="submit" class="btn btn-success" value="JSON">
             </form>
             </td>

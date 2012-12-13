@@ -8,14 +8,17 @@ User(Heinz):
 
 Booking(booking1):
     user: Horst
+    event: Pommes
     vegetarian: true
 
 Booking(booking2):
     user: Horst
+    event: Schnitzel
     vegetarian: false
 
 Booking(booking3):
     user: Heinz
+    event: Spaghetti
     vegetarian: false
 
 Event(Pommes):

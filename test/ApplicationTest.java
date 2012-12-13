@@ -17,6 +17,7 @@ import play.test.Fixtures;
 import play.test.FunctionalTest;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 public class ApplicationTest extends FunctionalTest {
@@ -67,13 +68,43 @@ public class ApplicationTest extends FunctionalTest {
     	String jsonEvent = gson.toJson(e);
     	
     	// ToDo: build your own json object
+    	JsonObject json = new JsonObject();
     	
-        Response response = POST("/event/json/create", "application/json", jsonEvent);
+    	long eventCount = Event.count();
+        Response response = POST("/event", "application/json", jsonEvent);
         
-        // ToDo: test if there is one more event now in the db
+        assertEquals(eventCount + 1, Event.count());
         assertStatus(StatusCode.CREATED, response);
     }
     
+    @Test
+    public void testUPDATEJsonEvent() {
+    	Event e = Event.all().first();
+    	e.id = null;
+    	Gson gson = new Gson();
+    	String jsonEvent = gson.toJson(e);
+    	
+    	JsonObject json = new JsonObject();
+    	
+        Response response = PUT("/event/2", "application/json", jsonEvent);
+        Event newEvent = Event.findById(2);
+        
+        assertEquals(newEvent.title, e.title);
+        assertEquals(newEvent.details, e.details);
+        assertEquals(newEvent.bookings, e.bookings);
+        assertEquals(newEvent.date, e.date);
+        assertStatus(204, response);
+    }
+    
+    public void testDELETEJsonEvent() {
+    	
+    	long eventCount = Event.count();
+    	
+        Response response = DELETE("/event/1");
+        
+        assertEquals(eventCount + 1, Event.count());
+        assertStatus(204, response);
+    }
     
     
     @Test
@@ -87,8 +118,7 @@ public class ApplicationTest extends FunctionalTest {
     	List<Event> events = Event.find("byTitle", "Pommes").fetch();
     	
     	for (Event event : events) {
-    		// FixMe: Fixtures should contain bookings
-    		assertEquals(0, event.bookings.size());
+    		assertEquals(1, event.bookings.size());
     		for (ListIterator<Booking> iter = event.bookings.listIterator(); iter.hasNext();) {
     			assertNotNull(iter.next().user);
     		}
