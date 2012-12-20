@@ -51,7 +51,6 @@ public class JsonController extends BaseController {
 		Event newEvent = new Gson().fromJson(body, Event.class);
 	    Event oldEvent = Event.findById(id);
 	    if (oldEvent != null) {
-		    Logger.info(oldEvent.id + oldEvent.title);
 	    	oldEvent.title = newEvent.title;
 	    	oldEvent.slots = newEvent.slots;
 	    	oldEvent.details = newEvent.details;

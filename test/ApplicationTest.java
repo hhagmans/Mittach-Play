@@ -11,6 +11,7 @@ import models.User;
 import org.junit.Before;
 import org.junit.Test;
 
+import play.Logger;
 import play.mvc.Http.Response;
 import play.mvc.Http.StatusCode;
 import play.test.Fixtures;
@@ -100,13 +101,14 @@ public class ApplicationTest extends FunctionalTest {
     	
         Event newEvent = Event.all().from(1).first();
         Response response = PUT("/event/" + newEvent.id, "application/json", jsonEvent);
-        newEvent = Event.findById(newEvent.id);
+        newEvent.refresh();
         
         assertStatus(204, response);
         assertEquals(newEvent.title, e.title);
         assertEquals(newEvent.details, e.details);
-        assertEquals(newEvent.bookings, e.bookings);
         assertEquals(newEvent.date, e.date);
+        assertEquals(newEvent.slots, e.slots);
+        assertEquals(newEvent.vegetarian_opt, e.vegetarian_opt);
     }
     
     @Test
