@@ -17,7 +17,9 @@ import play.test.Fixtures;
 import play.test.FunctionalTest;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 public class ApplicationTest extends FunctionalTest {
@@ -46,7 +48,7 @@ public class ApplicationTest extends FunctionalTest {
     public void testGetJsonEvent() {
     	// get event id
     	Event e = Event.all().first();
-        Response response = GET("/event" + e.id);
+        Response response = GET("/event/" + e.id);
         
         assertIsOk(response);
         assertContentType("application/json", response);
@@ -63,6 +65,11 @@ public class ApplicationTest extends FunctionalTest {
     @Test
     public void testPOSTJsonEvent() {
     	Event e = Event.all().first();
+    	if (e != null) {
+    		for (int i = 0; i< e.bookings.size();i++) {
+    			e.bookings.get(i).event = null;
+    		}
+    	}
     	e.id = null;
     	Gson gson = new Gson();
     	String jsonEvent = gson.toJson(e);
@@ -83,28 +90,33 @@ public class ApplicationTest extends FunctionalTest {
     @Test
     public void testUPDATEJsonEvent() {
     	Event e = Event.all().first();
-    	e.id = null;
+    	if (e != null) {
+    		for (int i = 0; i< e.bookings.size();i++) {
+    			e.bookings.get(i).event = null;
+    		}
+    	}
     	Gson gson = new Gson();
     	String jsonEvent = gson.toJson(e);
     	
-    	
-        Response response = PUT("/event/2", "application/json", jsonEvent);
-        Event newEvent = Event.findById(2);
+        Event newEvent = Event.all().from(1).first();
+        Response response = PUT("/event/" + newEvent.id, "application/json", jsonEvent);
+        newEvent = Event.findById(newEvent.id);
         
+        assertStatus(204, response);
         assertEquals(newEvent.title, e.title);
         assertEquals(newEvent.details, e.details);
         assertEquals(newEvent.bookings, e.bookings);
         assertEquals(newEvent.date, e.date);
-        assertStatus(204, response);
     }
     
+    @Test
     public void testDELETEJsonEvent() {
     	Event e = Event.all().first();
     	long eventCount = Event.count();
     	
-        Response response = DELETE("/event" + e.id);
+        Response response = DELETE("/event/" + e.id);
         
-        assertEquals(eventCount + 1, Event.count());
+        assertEquals(eventCount - 1, Event.count());
         assertStatus(204, response);
     }
     

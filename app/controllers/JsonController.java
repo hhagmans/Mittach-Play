@@ -9,6 +9,7 @@ import play.Logger;
 import play.mvc.Http.StatusCode;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 public class JsonController extends BaseController {
 	
@@ -37,18 +38,20 @@ public class JsonController extends BaseController {
 	    event = new Event(event);
 	    event.save();
 	    response.status = StatusCode.CREATED;
-	    }	finally {
+	    } catch (JsonParseException e) {
+	    	System.out.println("Konnte JsonString nicht parsen: "+e.getMessage());
 	    	response.status = 500;
 	    }
 	}
 	
-	public static void update(String body) {
+	public static void update(long id, String body) {
 		// curl -v -H "Content-Type: application/json" -X PUT -d '{"title":"dfhupdated","date":"Nov 29, 2012 12:00:00 AM","vegetarian_opt":false,"slots":-1,"details":"dhf","bookings":[],"id":1}' http://localhost:9000/event/1
 		Logger.info("content type: %s", request.contentType);
 	    Logger.info("json string: %s", body);
 		Event newEvent = new Gson().fromJson(body, Event.class);
-	    Event oldEvent = Event.findById(newEvent.id);
+	    Event oldEvent = Event.findById(id);
 	    if (oldEvent != null) {
+		    Logger.info(oldEvent.id + oldEvent.title);
 	    	oldEvent.title = newEvent.title;
 	    	oldEvent.slots = newEvent.slots;
 	    	oldEvent.details = newEvent.details;
@@ -98,7 +101,8 @@ public class JsonController extends BaseController {
 		}
 		}
 		response.status = StatusCode.CREATED;
-		} 	finally {
+		} 	catch (JsonParseException e) {
+	    	System.out.println("Konnte JsonString nicht parsen: "+e.getMessage());
 	    	response.status = 500;
 	    }
 	}
