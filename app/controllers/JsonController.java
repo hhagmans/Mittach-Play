@@ -13,12 +13,11 @@ import com.google.gson.Gson;
 public class JsonController extends BaseController {
 	
 	public static void event(long id) {
-		
 		Event event = Event.findById(id);
+		if (event != null) {
 		for (int i = 0; i< event.bookings.size();i++) {
 			event.bookings.get(i).event = null;
 		}
-		if (event != null) {
 		response.contentType = "application/json";
 		renderJSON(event);
 		}

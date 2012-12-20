@@ -46,7 +46,7 @@ public class ApplicationTest extends FunctionalTest {
     public void testGetJsonEvent() {
     	// get event id
     	Event e = Event.all().first();
-        Response response = GET("/event/json/" + e.id);
+        Response response = GET("/event" + e.id);
         
         assertIsOk(response);
         assertContentType("application/json", response);
@@ -67,14 +67,17 @@ public class ApplicationTest extends FunctionalTest {
     	Gson gson = new Gson();
     	String jsonEvent = gson.toJson(e);
     	
-    	// ToDo: build your own json object
-    	JsonObject json = new JsonObject();
-    	
     	long eventCount = Event.count();
         Response response = POST("/event", "application/json", jsonEvent);
         
         assertEquals(eventCount + 1, Event.count());
         assertStatus(StatusCode.CREATED, response);
+    }
+    
+    @Test
+    public void testPOSTInvalidJsonEvent() {
+    	Response response = POST("/event", "application/json", "invalid");
+    	assertStatus(500, response);
     }
     
     @Test
@@ -84,7 +87,6 @@ public class ApplicationTest extends FunctionalTest {
     	Gson gson = new Gson();
     	String jsonEvent = gson.toJson(e);
     	
-    	JsonObject json = new JsonObject();
     	
         Response response = PUT("/event/2", "application/json", jsonEvent);
         Event newEvent = Event.findById(2);
@@ -97,10 +99,10 @@ public class ApplicationTest extends FunctionalTest {
     }
     
     public void testDELETEJsonEvent() {
-    	
+    	Event e = Event.all().first();
     	long eventCount = Event.count();
     	
-        Response response = DELETE("/event/1");
+        Response response = DELETE("/event" + e.id);
         
         assertEquals(eventCount + 1, Event.count());
         assertStatus(204, response);
