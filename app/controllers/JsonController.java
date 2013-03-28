@@ -1,11 +1,14 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import models.Booking;
 import models.Event;
 import models.User;
 import play.Logger;
+import play.db.jpa.JPABase;
 import play.mvc.Http.StatusCode;
 
 import com.google.gson.Gson;
@@ -17,6 +20,7 @@ public class JsonController extends BaseController {
 		Event event = Event.findById(id);
 		if (event != null) {
 		for (int i = 0; i< event.bookings.size();i++) {
+			Booking booking = event.bookings.get(i);
 			event.bookings.get(i).event = null;
 		}
 		response.contentType = "application/json";
@@ -26,6 +30,19 @@ public class JsonController extends BaseController {
 			response.status = 404;
 		}
 		
+	}
+	
+	public static void list() {
+		List<Event> events = Event.all().fetch();
+		ListIterator iter = events.listIterator();
+		Event akt = null;
+		while (iter.hasNext()){
+			akt = (Event) iter.next();
+			for (int i = 0; i< akt.bookings.size();i++) {
+				akt.bookings.get(i).event = null;
+			}
+		}
+		renderJSON(events);
 	}
 	
 	public static void create(String body) {

@@ -44,6 +44,9 @@ GET    /manreports                          	Admincontroller.manualReports
 # Get Event as Json
 GET		/event/{<[0-9]+>id}    					JsonController.event
 
+# Get all Events as Json
+GET		/event/all    							JsonController.list
+
 # Create Event with Json String
 POST	/event               					JsonController.create
 
